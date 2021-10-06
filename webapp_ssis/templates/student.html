@@ -1,37 +1,93 @@
 {% extends "base.html"%}
 
-    {% block body %}
+    {% block student %}
     <div class="container-fluid">
         <div class="row mb-5">
             <div class="col-10 ml-auto mt-5">
                     <a href="#" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addmodal">Input Data</a>
-                    <table class="table">
+                    <table class="table table-hover table-dark">
                         <thead class="thead-light">
                             <tr>
-                                <th>ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Course</th>
-                                <th>Year</th>
-                                <th>Gender</th>
-                            </tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Firstname</th>
+                                <th scope="col">Lastname</th>
+                                <th scope="col">Course</th>
+                                <th scope="col">Year</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col"  class="text-center">Action</th>
+                              </tr>
                         </thead>
                         <tbody>
-                            {% for row in student %}
+                            {% for student in student %}
                                 <tr>
-                                    <td>{{ data.id_no }}</td>
-                                    <td>{{ data.first_name }}</td>
-                                    <td>{{ data.last_name }}</td>
-                                    <td>{{ data.course }}</td>
-                                    <td>{{ data.year_level }}</td>
-                                    <td>{{ data.gender }}</td>
-                                    <td>
-                                        <a href="#" class="btn btn-warning">Edit</a>
-                                        <a href="#" class="btn btn-danger" onclick="return confirm('Are you sure delete this data?')">Delete</a>
-                                    </td>
+                                    <td>{{student[0]}}</td>
+                                    <td>{{student[1]}}</td>
+                                    <td>{{student[2]}}</td>
+                                    <td>{{student[3]}}</td>
+                                    <td>{{student[4]}}</td>
+                                    <td>{{student[5]}}</td> 
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-warning btn-sm px-3" data-toggle="modal" data-target="#edit-student-modal{{student[0]}}">Edit</a>
+                                        <a class="mx-1"></a>
+                                        <form hidden id="del" action="{{url_for('student.deleteStudent')}}" method="POST">
+                                            <input hidden  value={{student[0]}} name="student_id_del">
+                                        </form>
+                                        <button type="submit"  form="del" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete?')">Delete</button>
+                                      </td>
                                 </tr>
-                            {% endfor %}
                         </tbody>
+                        <!-- MODAL EDIT STUDENT-->
+                        <div id="edit-student-modal{{student[0]}}" class="modal fade" tabindex="-1" aria-labelledby="edit-student-label" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Update Information</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('student.editStudent')}}" method="POST">
+                                            <div class="form-group">   
+                                                <input type="text" class="form-control" id="old_id_number" name="old_id_number" value="{{student[0]}}"required=True type="hidden"/>
+                                              </div>
+                                            <div class="form-group">
+                                                <label>ID No:</label>
+                                                <input type="text" class="form-control" name="id_no" value="{{student[0]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Firstname</label>
+                                                <input type="text" class="form-control" name="first_name" value="{{student[1]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Lastname</label>
+                                                <input type="text" class="form-control" name="last_name" value="{{student[2]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Course:</label>
+                                                <input type="text" class="form-control" name="course" value="{{student[3]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Year Level:</label>
+                                                <input type="text" class="form-control" name="year_level" value="{{student[4]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Gender:</label>
+                                                <input type="text" class="form-control" name="gender" value="{{student[5]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                                <!--MODAL EDIT FOOTER-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                                <!--MODAL EDIT FOOTER END-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--END MODAL EDIT-->
+                {% endfor %}
                     </table>
             </div>
         </div>
@@ -44,30 +100,30 @@
                 </div>
                 <!--MODAL BODY-->
                 <div class="modal-body">
-                    <form action="#" method="post">
+                    <form action="{{url_for('student.addStudent')}}" method="POST">
                         <div class="form-group">
                              <label>ID No:</label>
-                             <input type="text" class="form-control" name="id_no" required="1">
+                             <input type="" class="form-control" name="id_no" id="id_no" required="1">
                          </div>
                          <div class="form-group">
                              <label>First Name:</label>
-                             <input type="text" class="form-control" name="first_name" required="1">
+                             <input type="" class="form-control" name="first_name" id="first_name" required="1">
                          </div>
                          <div class="form-group">
                              <label>Last Name:</label>
-                             <input type="text" class="form-control" name="last_name" required="1">
+                             <input type="" class="form-control" name="last_name" id="last_name" required="1">
                          </div>
                          <div class="form-group">
                              <label>Course:</label>
-                             <input type="text" class="form-control" name="course" required="1">
+                             <input type="" class="form-control" name="course" id="course" required="1">
                          </div>
                          <div class="form-group">
                              <label>Year:</label>
-                             <input type="text" class="form-control" name="year_level" required="1">
+                             <input type="" class="form-control" name="year_level" id="year_level" required="1">
                          </div>
                          <div class="form-group">
                              <label>Gender:</label>
-                             <input type="text" class="form-control" name="gender" required="1">
+                             <input type="" class="form-control" name="gender" id="gender" required="1">
                          </div>
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit">Add Student</button>
