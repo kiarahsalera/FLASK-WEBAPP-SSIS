@@ -1,5 +1,118 @@
 {% extends "base.html"%}
 
-{% block course %} 
- 
-{% endblock %}
+    {% block course %}
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <div class="col-10 ml-auto mt-5">
+                    <a href="#" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addcoursemodal">Input Data</a>
+                    <table class="table table-hover table-dark">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Code</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">College</th>
+                                <th scope="col" class="text-center">Action</th>
+                              </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in course %}
+                                <tr>
+                                    <td>{{course[0]}}</td>
+                                    <td>{{course[1]}}</td>
+                                    <td>{{course[2]}}</td>
+                            
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-warning btn-sm px-3" data-toggle="modal" data-target="#edit-course-modal{{course[0]}}">Edit</a>
+                                        <a class="mx-1"></a>
+                                        <form hidden id="del" action="{{url_for('course.deleteCourse')}}" method="POST">
+                                            <input hidden  value={{course[0]}} name="course_id_del">
+                                        </form>
+                                        <button type="submit"  form="del" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete?')">Delete</button>
+                                      </td>
+                                </tr>
+                        </tbody>
+                        <!-- MODAL EDIT STUDENT-->
+                        <div id="edit-course-modal{{course[0]}}" class="modal fade" tabindex="-1" aria-labelledby="edit-course-label" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Update Information</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('course.editCourse')}}" method="POST">
+                                            <div class="form-group">   
+                                                <input type="" class="form-control" id="old_course_number" name="old_course_number" value="{{course[0]}}" required=True hidden/>
+                                              </div>
+                                            <div class="form-group">
+                                                <label>Code:</label>
+                                                <input type="text" class="form-control" name="code" value="{{course[0]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control" name="code_name" value="{{course[1]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>College</label>
+                                                <input type="text" class="form-control" name="college_name" value="{{course[2]}}">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                                <!--MODAL EDIT FOOTER-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                                <!--MODAL EDIT FOOTER END-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--END MODAL EDIT-->
+                {% endfor %}
+                    </table>
+            </div>
+        </div>
+    </div>
+    <div id="addcoursemodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                      <h4 class="modal-title">Add Course</h4>
+                </div>
+                <!--MODAL BODY-->
+                <div class="modal-body">
+                    <form action="{{url_for('course.addCourse')}}" method="POST">
+                        <div class="form-group">
+                             <label>Code:</label>
+                             <input type="" class="form-control" name="code" id="code" required="1">
+                         </div>
+                         <div class="form-group">
+                             <label>Name:</label>
+                             <input type="" class="form-control" name="code_name" id="code_name" required="1">
+                         </div>
+                         <div class="form-group">
+                             <label>College:</label>
+                             <input type="" class="form-control" name="college_name" id="college_name" required="1">
+                         </div>
+                         
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Add Course</button>
+                        </div>
+                    </form>
+                </div>
+                <!--MODAL BODY END-->
+                <!--MODAL ADD FOOTER-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                                    <!--MODAL ADD FOOTER END-->
+            </div>
+        </div>
+    </div>
+    
+    {% endblock %}
+
+  

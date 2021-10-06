@@ -22,15 +22,15 @@ def addStudent():
         gender = request.form['gender']
 
      
-        if validateIdNumber(id_no):
-                student = db.Student(id_no, first_name, last_name, course, year_level,gender)
-                student.add_student()
+
+        student = db.Student(id_no, first_name, last_name, course, year_level, gender)
+        student.add_student()
         return redirect(url_for('student.displayStudentPage'))
 
 @student.route("/student/delete_student", methods=["POST"]) 
 def deleteStudent():
     if request.method == "POST":
-        student_id = request.form.get('student_id_del')
+        student_id = request.form.get('id_no')
         db.Student.delete_student(student_id)
     
     return redirect(url_for("student.displayStudentPage"))
@@ -46,12 +46,6 @@ def editStudent():
         year_level = request.form['year_level']
         gender = request.form['gender']
 
-        if validateIdNumber(id_no):
-                db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, old_id_number)
-        return redirect(url_for('student.displayStudentPage'))
 
-def validateIdNumber(id_no):
-    pattern = re.compile(r'\d\d\d\d-\d\d\d\d')
-    valid = re.fullmatch(pattern, id_no)
-    
-    return valid
+        db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, old_id_number)
+        return redirect(url_for('student.displayStudentPage'))

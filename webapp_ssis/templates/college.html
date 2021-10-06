@@ -1,5 +1,107 @@
 {% extends "base.html"%}
 
-{% block college %} 
- 
+    {% block course %}
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <div class="col-10 ml-auto mt-5">
+                    <a href="#" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addcollegemodal">Input Data</a>
+                    <table class="table table-hover table-dark">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Code</th>
+                                <th scope="col">Name</th>
+                                <th scope="col" class="text-center">Action</th>
+                              </tr>
+                        </thead>
+                        <tbody>
+                            {% for college in college %}
+                                <tr>
+                                    <td>{{college[0]}}</td>
+                                    <td>{{college[1]}}</td>
+                            
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-warning btn-sm px-3" data-toggle="modal" data-target="#edit-college-modal{{college[0]}}">Edit</a>
+                                        <a class="mx-1"></a>
+                                        <form hidden id="del" action="{{url_for('college.deleteCollege')}}" method="POST">
+                                            <input hidden  value={{college[0]}} name="college_id_del">
+                                        </form>
+                                        <button type="submit"  form="del" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete?')">Delete</button>
+                                      </td>
+                                </tr>
+                        </tbody>
+                        <!-- MODAL EDIT STUDENT-->
+                        <div id="edit-college-modal{{college[0]}}" class="modal fade" tabindex="-1" aria-labelledby="edit-college-label" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Update Information</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('college.editCollege')}}" method="POST">
+                                            <div class="form-group">   
+                                                <input type="" class="form-control" id="old_college_number" name="old_college_number" value="{{college[0]}}" required=True hidden/>
+                                              </div>
+                                            <div class="form-group">
+                                                <label>Code:</label>
+                                                <input type="text" class="form-control" name="college_code" value="{{college[0]}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control" name="colcode_name" value="{{college[1]}}">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                                <!--MODAL EDIT FOOTER-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                                <!--MODAL EDIT FOOTER END-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--END MODAL EDIT-->
+                {% endfor %}
+                    </table>
+            </div>
+        </div>
+    </div>
+    <div id="addcollegemodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                      <h4 class="modal-title">Add College</h4>
+                </div>
+                <!--MODAL BODY-->
+                <div class="modal-body">
+                    <form action="{{url_for('college.addCollege')}}" method="POST">
+                        <div class="form-group">
+                             <label>Code:</label>
+                             <input type="" class="form-control" name="college_code" id="college_code" required="1">
+                         </div>
+                         <div class="form-group">
+                             <label>Name:</label>
+                             <input type="" class="form-control" name="colcode_name" id="colcode_name" required="1">
+                         </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Add Course</button>
+                        </div>
+                    </form>
+                </div>
+                <!--MODAL BODY END-->
+                <!--MODAL ADD FOOTER-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                                    <!--MODAL ADD FOOTER END-->
+            </div>
+        </div>
+    </div>
+    
+  
+
 {% endblock %}

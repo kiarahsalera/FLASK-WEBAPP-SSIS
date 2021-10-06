@@ -49,4 +49,85 @@ class Student():
         data = [id_no, first_name, last_name, course, year_level, gender, old_id_number]
         cursor.execute(query,data)
         database.commit()
- 
+
+
+class Course():
+    def __init__(self, code, code_name, college_name):
+        self.code = code 
+        self.code_name = code_name
+        self.college_name = college_name
+
+    @classmethod
+    def get_course(cls):
+        query = "SELECT * FROM course"
+        cursor.execute(query)
+        course = cursor.fetchall()
+        return course 
+    
+    def add_course(self):
+        query = "INSERT INTO course(code, code_name, college_name) VALUES \
+                 (%s,%s,%s)"
+        data = [self.code, self.code_name, self.college_name]
+        cursor.execute(query, data)
+        database.commit()
+
+    @classmethod
+    def display_course(cls):
+        query = "SELECT * FROM course"
+        cursor.execute(query)
+        course = cursor.fetchall()
+        return course
+
+    @classmethod
+    def edit_course(cls, code, code_name, college_name, old_course_code):
+        query = "UPDATE course SET code=%s, code_name=%s, college_name=%s WHERE code=%s"
+        data = [code, code_name, college_name, old_course_code]
+        cursor.execute(query, data)
+        database.commit()
+
+    @classmethod
+    def delete_course(cls, code):
+        query = "DELETE FROM course WHERE code=%s"
+        data = [code]
+        cursor.execute(query, data)
+        database.commit()
+
+class College():
+    def __init__(self, college_code, colcode_name):
+        self.college_code = college_code 
+        self.colcode_name = colcode_name
+
+    @classmethod
+    def get_college(cls):
+        query = "SELECT * FROM college"
+        cursor.execute(query)
+        college = cursor.fetchall()
+        return college
+    
+    def add_college(self):
+        query = "INSERT INTO college(college_code, colcode_name) VALUES \
+                 (%s,%s)"
+        data = [self.college_code, self.colcode_name]
+        cursor.execute(query, data)
+        database.commit()
+
+    @classmethod
+    def display_college(cls):
+        query = "SELECT * FROM college"
+        cursor.execute(query)
+        college = cursor.fetchall()
+        return college
+
+    @classmethod
+    def edit_college(cls, college_code, colcode_name, old_college_code):
+        query = "UPDATE college SET college_code=%s, colcode_name=%s WHERE college_code=%s"
+        data = [college_code, colcode_name, old_college_code]
+        cursor.execute(query, data)
+        database.commit()
+
+    @classmethod
+    def delete_college(cls, college_code):
+        query = "DELETE FROM college WHERE college_code=%s"
+        data = [college_code]
+        cursor.execute(query, data)
+        database.commit()
