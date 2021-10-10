@@ -1,6 +1,6 @@
 from os import getenv
 
-SECRET_KEY = getenv("")
+SECRET_KEY = getenv("123")
 DB_NAME = getenv("ssis-webapp")
 DB_USERNAME = getenv("root")
 DB_PASSWORD = getenv("")

@@ -1,5 +1,6 @@
 from webapp_ssis import mysql
 import mysql.connector as mysql
+from flaskext.mysql import MySQL
 
 
 database = mysql.connect(
@@ -49,6 +50,14 @@ class Student():
         data = [id_no, first_name, last_name, course, year_level, gender, old_id_number]
         cursor.execute(query,data)
         database.commit()
+
+    @classmethod  
+    def search_student(cls, key):
+        query = "SELECT * FROM student WHERE id_no=%s or first_name=%s or last_name=%s"
+        data = [key, key]
+        cursor.execute(query,data)
+        data = cursor.fetchall()
+        return data
 
 
 class Course():

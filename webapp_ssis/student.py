@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request
 import webapp_ssis.functions as db
-import re
+from webapp_ssis.studentform import StudentForm
+
 
 student = Blueprint('student', __name__)
+
 
 
 @student.route("/student", methods=['GET', 'POST'])
@@ -46,6 +48,20 @@ def editStudent():
         year_level = request.form['year_level']
         gender = request.form['gender']
 
-
+  
         db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, old_id_number)
         return redirect(url_for('student.displayStudentPage'))
+
+
+@student.route('/student/search_student', methods=['GET', 'POST'])
+def searchStudent():
+    result = []
+    form = StudentForm()
+    if request.method == "POST":
+        search = request.form['search']
+        result = db.Student.search_student(search)
+
+        if len(result) == 0:
+            result = db.Student.display_students()
+
+        return render_template('student.html', student = result, form=form)
