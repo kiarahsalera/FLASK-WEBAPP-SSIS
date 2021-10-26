@@ -1,15 +1,12 @@
 from flask import Flask
 from flask_mysql_connector import MySQL
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOST, SECRET_KEY
-from flask_wtf.csrf import CSRFProtect
 
-
-csrf = CSRFProtect()
 mysql = MySQL
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    csrf.init_app(app) 
+  
 
     app.config.from_mapping(
         SECRET_KEY = SECRET_KEY,

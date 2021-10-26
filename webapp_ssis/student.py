@@ -1,16 +1,52 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 import webapp_ssis.functions as db
-from webapp_ssis.studentform import StudentForm
+
 
 
 student = Blueprint('student', __name__)
 
 
 
+
 @student.route("/student", methods=['GET', 'POST'])
 def displayStudentPage():
     student = db.Student.display_students()
-    return render_template('student.html',student=student)
+    return render_template('student.html', 
+                                student = [student],
+                                datacount = f'{len(student)} Student')
+
+@student.route('/student/search', methods=['GET', 'POST'])
+def search() -> str:
+    if request.method == 'POST':
+
+        user_input = request.form.get('user-input')
+        field = request.form.get('field')
+        print(user_input,field)
+
+        if field == 'select':
+            result = db.Student().search(keyword=user_input)
+        elif field == 'id_no':
+            result = db.Student().search(keyword=user_input, field='id_no')
+        elif field == 'first_name':
+            result = db.Student().search(keyword=user_input, field='first_name')
+        elif field == 'last_name':
+            result = db.Student().search(keyword=user_input, field='last_name')
+        elif field == 'course':
+            result = db.Student().search(keyword=user_input, field='course')
+        elif field == 'year_level':
+            result = db.Student().search(keyword=user_input, field='year_level')
+        elif field == 'gender':
+            result = db.Student().search(keyword=user_input, field='gender')
+        else:
+            result = []
+
+        if len(result) != 0:
+            return render_template('student.html', 
+                                    student=[result],
+                                    datacount = f'Search Result: {len(result)}'
+                                   )
+    else:
+        return redirect(url_for('student.displayStudentPage'))
 
 
 @student.route("/student/add_student", methods=['GET', 'POST'])
@@ -32,7 +68,7 @@ def addStudent():
 @student.route("/student/delete_student", methods=["POST"]) 
 def deleteStudent():
     if request.method == "POST":
-        student_id = request.form.get('id_no')
+        student_id = request.form.get('student_id_del')
         db.Student.delete_student(student_id)
     
     return redirect(url_for("student.displayStudentPage"))
@@ -51,17 +87,3 @@ def editStudent():
   
         db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, old_id_number)
         return redirect(url_for('student.displayStudentPage'))
-
-
-@student.route('/student/search_student', methods=['GET', 'POST'])
-def searchStudent():
-    result = []
-    form = StudentForm()
-    if request.method == "POST":
-        search = request.form['search']
-        result = db.Student.search_student(search)
-
-        if len(result) == 0:
-            result = db.Student.display_students()
-
-        return render_template('student.html', student = result, form=form)

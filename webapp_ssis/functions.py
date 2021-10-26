@@ -1,6 +1,9 @@
+from re import search
 from webapp_ssis import mysql
 import mysql.connector as mysql
 from flaskext.mysql import MySQL
+from flask import jsonify
+
 
 
 database = mysql.connect(
@@ -14,13 +17,80 @@ cursor = database.cursor()
 
 class Student():
     
-    def __init__(self, id_no, first_name, last_name, course, year_level, gender):
+    def __init__(
+        self, 
+        id_no: str = None,
+        first_name: str = None,
+        last_name: str = None,
+        course: str = None,
+        year_level: str = None,
+        gender: str = None) -> None:
+    
+
         self.id_no = id_no
         self.first_name = first_name
         self.last_name = last_name
         self.course = course
         self.year_level = year_level
         self.gender = gender
+
+
+    def search(self, keyword: str = None, field: str = None) -> list:
+        keyword = keyword.upper()
+        student = self.display_students()
+        result = []
+
+        if field is None: 
+            result = self.search_by_field(student, keyword, 'all')
+        elif field == 'id_no':
+            result = self.search_by_field(student, keyword, 'id_no')
+        elif field == 'first_name':
+            result = self.search_by_field(student, keyword, 'first_name')
+        elif field == 'last_name':
+            result = self.search_by_field(student, keyword, 'last_name')
+        elif field == 'course':
+            result = self.search_by_field(student, keyword, 'course')
+        elif field == 'year_level':
+            result = self.search_by_field(student, keyword, 'year_level')
+        elif field == 'gender':
+            result = self.search_by_field(student, keyword, 'gender')
+        
+        return result
+
+
+    @staticmethod
+    def search_by_field(rows: list = None, keyword: str = None, field: str = None) -> list:
+        result = []
+        for row in rows:
+            row_allcaps = [str(cell).upper() for cell in row]
+
+            if field == 'all':
+                if keyword in row_allcaps:
+                    result.append(row)
+            elif field == 'id_no':
+                if keyword == row_allcaps[0]:
+                    result.append(row)
+                    return result
+            elif field == 'first_name':
+                if keyword == row_allcaps[1]:
+                    result.append(row)
+            elif field == 'last_name':
+                if keyword == row_allcaps[2]:
+                    result.append(row)
+            elif field == 'course':
+                if keyword == row_allcaps[3]:
+                    result.append(row)
+            elif field == 'year_level':
+                if keyword == row_allcaps[4]:
+                    result.append(row)
+            elif field == 'gender':
+                if keyword == row_allcaps[5]:
+                    result.append(row)
+
+        return result
+
+
+
 
     def add_student(self):
         query = "INSERT INTO student(id_no, first_name, last_name, course, year_level, gender) \
@@ -30,11 +100,22 @@ class Student():
         database.commit() 
 
     @classmethod
-    def display_students(cls):
-        query = "SELECT * FROM student"
-        cursor.execute(query)    
-        student = cursor.fetchall()
+    def display_students(self)-> list:
+        query = '''
+            SELECT id_no, 
+                   first_name,  
+                   last_name, 
+                   course, 
+                   year_level, 
+                   gender 
+            FROM student
+            
+        '''
+        cursor.execute(query)  
+        result = cursor.fetchall() 
+        student = [list(student) for student in result]
         return student
+
 
     @classmethod
     def delete_student(cls, id_no):
@@ -50,14 +131,6 @@ class Student():
         data = [id_no, first_name, last_name, course, year_level, gender, old_id_number]
         cursor.execute(query,data)
         database.commit()
-
-    @classmethod  
-    def search_student(cls, key):
-        query = "SELECT * FROM student WHERE id_no=%s or first_name=%s or last_name=%s"
-        data = [key, key]
-        cursor.execute(query,data)
-        data = cursor.fetchall()
-        return data
 
 
 class Course():
