@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 import webapp_ssis.functions as db
 
 
@@ -65,13 +65,13 @@ def addStudent():
         student.add_student()
         return redirect(url_for('student.displayStudentPage'))
 
-@student.route("/student/delete_student", methods=["POST"]) 
-def deleteStudent():
-    if request.method == "POST":
-        student_id = request.form.get('student_id_del')
-        db.Student.delete_student(student_id)
-    
-    return redirect(url_for("student.displayStudentPage"))
+
+@student.route('/students/delete/<string:id_no>')
+def delete(id_no: str) -> str:
+    db.Student().delete(id_no)
+    return redirect(url_for('student.displayStudentPage'))
+
+
 
 @student.route("/student/edit_student", methods=['GET', 'POST'])
 def editStudent():

@@ -116,13 +116,31 @@ class Student():
         student = [list(student) for student in result]
         return student
 
+    @staticmethod
+    def get_student(id_no: str = None) -> str:
+        query = f'''
+           SELECT id_no, 
+                   first_name,  
+                   last_name, 
+                   course, 
+                   year_level, 
+                   gender 
+            FROM student
+            WHERE id_no = '{id_no}'
+        '''
+        cursor.execute(query)
+        student = list(cursor.fetchone())
+        return student
 
-    @classmethod
-    def delete_student(cls, id_no):
-        query = "DELETE FROM student WHERE id_no=%s"
-        data = [id_no]
-        cursor.execute(query, data)
+    @staticmethod
+    def delete(id_no: str = None) -> None:
+        query = f'''
+            DELETE FROM student
+            WHERE id_no='{id_no}'
+        '''
+        cursor.execute(query)
         database.commit()
+        return None
 
     @classmethod
     def edit_student(cls, id_no, first_name, last_name, course, year_level, gender, old_id_number):
