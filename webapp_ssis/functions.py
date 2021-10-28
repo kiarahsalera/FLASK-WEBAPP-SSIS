@@ -1,5 +1,5 @@
 from re import search
-from webapp_ssis import mysql
+from webapp_ssis import college, course, mysql
 import mysql.connector as mysql
 from flaskext.mysql import MySQL
 from flask import jsonify
@@ -134,18 +134,58 @@ class Student():
 
 
 class Course():
-    def __init__(self, code, code_name, college_name):
+    def __init__(
+        self, 
+        code: str = None,
+        code_name: str = None,
+        college_name: str = None) -> None:
+
+
         self.code = code 
         self.code_name = code_name
         self.college_name = college_name
 
-    @classmethod
-    def get_course(cls):
-        query = "SELECT * FROM course"
-        cursor.execute(query)
-        course = cursor.fetchall()
-        return course 
-    
+
+    def search(self, keyword: str = None, field: str = None) -> list:
+        keyword = keyword.upper()
+        course = self.display_course()
+        result = []
+
+        if field is None: 
+            result = self.search_by_field(course, keyword, 'all')
+        elif field == 'code':
+            result = self.search_by_field(course, keyword, 'code')
+        elif field == 'code_name':
+            result = self.search_by_field(course, keyword, 'code_name')
+        elif field == 'college_name':
+            result = self.search_by_field(course, keyword, 'college_name')
+        
+        return result
+
+
+    @staticmethod
+    def search_by_field(rows: list = None, keyword: str = None, field: str = None) -> list:
+        result = []
+        for row in rows:
+            row_allcaps = [str(cell).upper() for cell in row]
+
+            if field == 'all':
+                if keyword in row_allcaps:
+                    result.append(row)
+            elif field == 'code':
+                if keyword == row_allcaps[0]:
+                    result.append(row)
+                    return result
+            elif field == 'code_name':
+                if keyword == row_allcaps[1]:
+                    result.append(row)
+            elif field == 'college_name':
+                if keyword == row_allcaps[2]:
+                    result.append(row)
+
+        return result
+
+
     def add_course(self):
         query = "INSERT INTO course(code, code_name, college_name) VALUES \
                  (%s,%s,%s)"
@@ -154,12 +194,20 @@ class Course():
         database.commit()
 
     @classmethod
-    def display_course(cls):
-        query = "SELECT * FROM course"
+    def display_course(self)-> list:
+        query = '''
+            SELECT code, 
+                   code_name,  
+                   college_name 
+            FROM course
+            
+        '''
         cursor.execute(query)
-        course = cursor.fetchall()
+        result = cursor.fetchall() 
+        course = [list(course) for course in result]
         return course
 
+ 
     @classmethod
     def edit_course(cls, code, code_name, college_name, old_course_code):
         query = "UPDATE course SET code=%s, code_name=%s, college_name=%s WHERE code=%s"
@@ -175,9 +223,46 @@ class Course():
         database.commit()
 
 class College():
-    def __init__(self, college_code, colcode_name):
+    def __init__(
+        self, 
+        college_code: str = None,
+        colcode_name: str = None) -> None:
+
         self.college_code = college_code 
         self.colcode_name = colcode_name
+
+    def search(self, keyword: str = None, field: str = None) -> list:
+        keyword = keyword.upper()
+        college = self.display_college()
+        result = []
+
+        if field is None: 
+            result = self.search_by_field(college, keyword, 'all')
+        elif field == 'college_code':
+            result = self.search_by_field(college, keyword, 'college_code')
+        elif field == 'colcode_name':
+            result = self.search_by_field(college, keyword, 'colcode_name')
+        
+        return result
+
+    @staticmethod
+    def search_by_field(rows: list = None, keyword: str = None, field: str = None) -> list:
+        result = []
+        for row in rows:
+            row_allcaps = [str(cell).upper() for cell in row]
+
+            if field == 'all':
+                if keyword in row_allcaps:
+                    result.append(row)
+            elif field == 'college_code':
+                if keyword == row_allcaps[0]:
+                    result.append(row)
+                    return result
+            elif field == 'colcode_name':
+                if keyword == row_allcaps[1]:
+                    result.append(row)
+
+        return result
 
     @classmethod
     def get_college(cls):
@@ -194,10 +279,16 @@ class College():
         database.commit()
 
     @classmethod
-    def display_college(cls):
-        query = "SELECT * FROM college"
+    def display_college(self)-> list:
+        query = '''
+            SELECT college_code, 
+                   colcode_name  
+            FROM college
+            
+        '''
         cursor.execute(query)
-        college = cursor.fetchall()
+        result = cursor.fetchall() 
+        college = [list(college) for college in result]
         return college
 
     @classmethod

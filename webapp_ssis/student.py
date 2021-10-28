@@ -7,7 +7,7 @@ student = Blueprint('student', __name__)
 
 
 
-
+@student.route('/')
 @student.route("/student", methods=['GET', 'POST'])
 def displayStudentPage():
     student = db.Student.display_students()

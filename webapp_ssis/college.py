@@ -8,7 +8,35 @@ college = Blueprint('college', __name__)
 @college.route("/college", methods=['GET', 'POST'])
 def displayCollegePage():
     college = db.College.display_college()
-    return render_template('college.html',college=college)
+    return render_template('college.html', 
+                                college = [college],
+                                datacount = f'{len(college)} College')
+
+@college.route('/college/search', methods=['GET', 'POST'])
+def search() -> str:
+    if request.method == 'POST':
+
+        user_input = request.form.get('user-input')
+        field = request.form.get('field')
+        print(user_input,field)
+
+        if field == 'select':
+            result = db.College().search(keyword=user_input)
+        elif field == 'college_code':
+            result = db.College().search(keyword=user_input, field='college_code')
+        elif field == 'colcode_name':
+            result = db.College().search(keyword=user_input, field='colcode_name')
+        else:
+            result = []
+
+        if len(result) != 0:
+            return render_template('college.html', 
+                                    college=[result],
+                                    datacount = f'Search Result: {len(result)}'
+                                   )
+    else:
+        return redirect(url_for('college.displayCollegePage'))
+
 
 
 @college.route("/college/add_college", methods=['GET', 'POST'])

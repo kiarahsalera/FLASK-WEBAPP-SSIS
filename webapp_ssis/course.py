@@ -8,7 +8,37 @@ course = Blueprint('course', __name__)
 @course.route("/course", methods=['GET', 'POST'])
 def displayCoursePage():
     course = db.Course.display_course()
-    return render_template('course.html',course=course)
+    return render_template('course.html', 
+                                course = [course],
+                                datacount = f'{len(course)} Course')
+
+@course.route('/course/search', methods=['GET', 'POST'])
+def search() -> str:
+    if request.method == 'POST':
+
+        user_input = request.form.get('user-input')
+        field = request.form.get('field')
+        print(user_input,field)
+
+        if field == 'select':
+            result = db.Course().search(keyword=user_input)
+        elif field == 'code':
+            result = db.Course().search(keyword=user_input, field='code')
+        elif field == 'code_name':
+            result = db.Course().search(keyword=user_input, field='code_name')
+        elif field == 'college_name':
+            result = db.Course().search(keyword=user_input, field='college_name')
+        else:
+            result = []
+
+        if len(result) != 0:
+            return render_template('course.html', 
+                                    course=[result],
+                                    datacount = f'Search Result: {len(result)}'
+                                   )
+    else:
+        return redirect(url_for('course.displayCoursePage'))
+
 
 
 @course.route("/course/add_course", methods=['GET', 'POST'])

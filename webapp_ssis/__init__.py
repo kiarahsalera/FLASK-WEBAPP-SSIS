@@ -16,12 +16,12 @@ def create_app():
         MYSQL_HOST=DB_HOST
     )
 
-    from .homepage import homepage
+ 
     from .college import college
     from .course import course
     from .student import student
 
-    app.register_blueprint(homepage, url_prefix="/")
+
     app.register_blueprint(student, url_prefix="/")
     app.register_blueprint(course, url_prefix="/")
     app.register_blueprint(college, url_prefix="/")

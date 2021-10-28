@@ -25,7 +25,6 @@
             <div class="col-xl-2 col-lg-3 col-md-4 d-flex flex-column flex-shrink-0 fixed-top bg-dark" style="height: 100vh;">
               <a href="#" class="navbar-brand text-white d-block text-center py-3 mb-1 bottom-border">STUDENT INFORMATION</a>
               <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item"><a  href="/" class="nav-link text-white p-3 mb-4"><i class="fas fa-home text-light fa-lg mr-3"></i>Dashboard</a></li>
                 <li class="nav-item"><a type="submit" href="/student" class="nav-link text-white p-3 mb-4"><i class="fas fa-user text-light fa-lg mr-3"></i>Student</a></li>
                 <li class="nav-item"><a type="submit" href="/course" class="nav-link text-white p-3 mb-4"><i class="fas fa-table text-light fa-lg mr-3"></i>Course</a></li>
                 <li class="nav-item"><a type="submit" href="/college" class="nav-link text-white p-3 mb-4"><i class="far fa-building text-light fa-lg mr-3"></i>College</a></li>
@@ -54,8 +53,8 @@
     <!-- end of navbar -->
     
     
-    {% block index %} {% endblock %}
-    {% block students %} {% endblock %}
+
+    {% block student %} {% endblock %}
     {% block course %} {% endblock %}
     {% block college %} {% endblock %}
     

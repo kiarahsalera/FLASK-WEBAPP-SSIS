@@ -1,5 +1,5 @@
 {% extends "base.html"%}
-{% block students %}
+{% block student %}
 {% block search %}      
     <form class="pt-3 pb-3 d-flex align-items-center caption-lower" method="post" action="{{url_for('student.search')}}" >
         <select id="field" name="field" class="form-select p-2">
@@ -7,13 +7,12 @@
             <option value="id_no">Student ID</option>
             <option value="first_name">First Name</option>
             <option value="last_name">Last Name</option>
-            <option value="course">Gender</option>
             <option value="year_level">Year Level</option>
             <option value="gender">Course</option>
         </select>
       <div class="input-group">
-        <input id="searchField" type="text" class="form-control searchfield" name="user-input" placeholder="Type to search using ID, Name, Gender, Level, and Course">
-        <button type="submit" class="btn btn-white search-button"><i class="fas fa-search text-danger"></i></button>
+        <input id="searchField" type="text" class="form-control searchfield ml-2" name="user-input" placeholder="Type to search using ID, Name, Gender, Level, and Course">
+        <button type="submit" class="btn btn-white search-button ml-2"><i class="fas fa-search text-danger"></i></button>
       </div>
     </form>
 {% endblock %}
@@ -64,7 +63,7 @@
                                     <div class="modal-body">
                                         <form action="{{url_for('student.editStudent')}}" method="POST">
                                             <div class="form-group">   
-                                                <input type="text" class="form-control" id="old_id_number" name="old_id_number" value="{{student[0]}}"required=True type="hidden"/>
+                                                <input type="hidden" class="form-control" id="old_id_number" name="old_id_number" value="{{student[0]}}" required="True">
                                               </div>
                                             <div class="form-group">
                                                 <label>ID No:</label>

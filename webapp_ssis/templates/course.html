@@ -1,19 +1,16 @@
 {% extends "base.html"%}
 {% block course %}
 {% block search %}      
-    <form class="pt-3 pb-3 d-flex align-items-center caption-lower" method="post" action="{{url_for('student.search')}}" >
+    <form class="pt-3 pb-3 d-flex align-items-center caption-lower" method="post" action="{{url_for('course.search')}}" >
         <select id="field" name="field" class="form-select p-2">
             <option value="select">Select Field</option>
-            <option value="id_no">Student ID</option>
-            <option value="first_name">First Name</option>
-            <option value="last_name">Last Name</option>
-            <option value="course">Gender</option>
-            <option value="year_level">Year Level</option>
-            <option value="gender">Course</option>
+            <option value="code">Code</option>
+            <option value="code_name">Name</option>
+            <option value="college_name">College</option>
         </select>
       <div class="input-group">
-        <input id="searchField" type="text" class="form-control searchfield" name="user-input" placeholder="Type to search using ID, Name, Gender, Level, and Course">
-        <button type="submit" class="btn btn-white search-button"><i class="fas fa-search text-danger"></i></button>
+        <input id="searchField" type="text" class="form-control searchfield ml-2" name="user-input" placeholder="Type to search using Code, Name, and College">
+        <button type="submit" class="btn btn-white search-button ml-2"><i class="fas fa-search text-danger"></i></button>
       </div>
     </form>
 {% endblock %}
@@ -32,7 +29,7 @@
                               </tr>
                         </thead>
                         <tbody>
-                            {% for course in course %}
+                            {% for course in course [0] %}
                                 <tr>
                                     <td>{{course[0]}}</td>
                                     <td>{{course[1]}}</td>
