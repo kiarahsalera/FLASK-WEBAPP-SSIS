@@ -285,12 +285,6 @@ class College():
 
         return result
 
-    @classmethod
-    def get_college(cls):
-        query = "SELECT * FROM college"
-        cursor.execute(query)
-        college = cursor.fetchall()
-        return college
     
     def add_college(self):
         query = "INSERT INTO college(college_code, colcode_name) VALUES \
@@ -319,9 +313,12 @@ class College():
         cursor.execute(query, data)
         database.commit()
 
-    @classmethod
-    def delete_college(cls, college_code):
-        query = "DELETE FROM college WHERE college_code=%s"
-        data = [college_code]
-        cursor.execute(query, data)
+    @staticmethod
+    def delete(college_code: str = None) -> None:
+        query = f'''
+            DELETE FROM college
+            WHERE college_code='{college_code}'
+        '''
+        cursor.execute(query)
         database.commit()
+        return None

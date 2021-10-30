@@ -50,11 +50,9 @@ def addCollege():
         college.add_college()
         return redirect(url_for('college.displayCollegePage'))
 
-@college.route("/college/delete_college", methods=["POST"]) 
-def deleteCollege():
-    if request.method == "POST":
-        college_code = request.form.get('college_id_del')
-        db.College.delete_college(college_code)
+@college.route('/college/delete/<string:college_code>')
+def delete(college_code: str) -> str:
+    db.College().delete(college_code)
     
     return redirect(url_for("college.displayCollegePage"))
 
