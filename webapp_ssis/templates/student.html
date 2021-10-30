@@ -1,4 +1,6 @@
 {% extends "base.html"%}
+
+
 {% block student %}
 {% block search %}      
     <form class="pt-3 pb-3 d-flex align-items-center caption-lower" method="post" action="{{url_for('student.search')}}" >
@@ -11,7 +13,7 @@
             <option value="gender">Course</option>
         </select>
       <div class="input-group">
-        <input id="searchField" type="text" class="form-control searchfield ml-2" name="user-input" placeholder="Type to search using ID, Name, Gender, Level, and Course">
+        <input id="searchField" type="text" class="form-control searchfield ml-2" name="user-input" placeholder="Type to Search">
         <button type="submit" class="btn btn-white search-button ml-2"><i class="fas fa-search text-danger"></i></button>
       </div>
     </form>
@@ -21,17 +23,17 @@
     <div class="container-fluid">
         <div class="row mb-5">
             <div class="col-10 ml-auto mt-5">
-                    <a href="#" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addmodal">Input Data</a>
-                    <table class="table table-hover table-dark table-striped custab">
+                    <a href="#" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addmodal">Add Student</a>
+                    <table class="table table-hover table-bordered" style="background-color: #dff0d8;">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Firstname</th>
-                                <th scope="col">Lastname</th>
-                                <th scope="col">Course</th>
-                                <th scope="col">Year</th>
-                                <th scope="col">Gender</th>
-                                <th scope="col"  class="text-center">Action</th>
+                                <th scope="col-sm">ID</th>
+                                <th scope="col-sm">Firstname</th>
+                                <th scope="col-sm">Lastname</th>
+                                <th scope="col-sm">Course</th>
+                                <th scope="col-sm">Year</th>
+                                <th scope="col-sm">Gender</th>
+                                <th scope="col-sm" class="text-center">Action</th>
                               </tr>
                         </thead>
                         <tbody>
