@@ -37,11 +37,7 @@
                             
                                     <td class="text-center">
                                         <a href="#" class="btn btn-warning btn-sm px-3" data-toggle="modal" data-target="#edit-course-modal{{course[0]}}">Edit</a>
-                                        <a class="mx-1"></a>
-                                        <form hidden id="del" action="{{url_for('course.deleteCourse')}}" method="POST">
-                                            <input hidden  value={{course[0]}} name="course_id_del">
-                                        </form>
-                                        <button type="submit"  form="del" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete?')">Delete</button>
+                                        <a href="{{url_for('course.delete', code=course[0])}}" class="btn btn-danger btn-sm px-3" onclick="return confirm('Are you sure you want to remove ?')">Delete</a>
                                       </td>
                                 </tr>
                         </tbody>

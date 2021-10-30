@@ -233,12 +233,15 @@ class Course():
         cursor.execute(query, data)
         database.commit()
 
-    @classmethod
-    def delete_course(cls, code):
-        query = "DELETE FROM course WHERE code=%s"
-        data = [code]
-        cursor.execute(query, data)
+    @staticmethod
+    def delete(code: str = None) -> None:
+        query = f'''
+            DELETE FROM course
+            WHERE code='{code}'
+        '''
+        cursor.execute(query)
         database.commit()
+        return None
 
 class College():
     def __init__(

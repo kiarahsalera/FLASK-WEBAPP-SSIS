@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 import webapp_ssis.functions as db
-import re
+
 
 course = Blueprint('course', __name__)
 
@@ -54,11 +54,9 @@ def addCourse():
         course.add_course()
         return redirect(url_for('course.displayCoursePage'))
 
-@course.route("/course/delete_course", methods=["POST"]) 
-def deleteCourse():
-    if request.method == "POST":
-        code = request.form.get('course_id_del')
-        db.Course.delete_course(code)
+@course.route('/course/delete/<string:code>')
+def delete(code: str) -> str:
+    db.Course().delete(code)
     
     return redirect(url_for("course.displayCoursePage"))
 
