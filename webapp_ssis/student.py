@@ -11,8 +11,9 @@ student = Blueprint('student', __name__)
 @student.route("/student", methods=['GET', 'POST'])
 def displayStudentPage():
     student = db.Student.display_students()
+    course = db.Course.display_course()
     return render_template('student.html', 
-                                student = [student],
+                                student = [student,course],
                                 datacount = f'{len(student)} Student')
 
 @student.route('/student/search', methods=['GET', 'POST'])

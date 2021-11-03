@@ -107,8 +107,11 @@ class Student():
                    last_name, 
                    course, 
                    year_level, 
-                   gender 
+                   gender,
+                   course.code_name
             FROM student
+            JOIN course
+            ON student.course = course.code
             
         '''
         cursor.execute(query)  
@@ -214,16 +217,43 @@ class Course():
     @classmethod
     def display_course(self)-> list:
         query = '''
-            SELECT code, 
-                   code_name,  
-                   college_name 
+            SELECT course.code, 
+                   course.code_name,  
+                   course.college_name 
             FROM course
+            JOIN college
+            ON course.college_name = college.college_code
             
         '''
         cursor.execute(query)
         result = cursor.fetchall() 
         course = [list(course) for course in result]
         return course
+        
+    @staticmethod
+    def get_coursecode_for(course_name: str = None) -> str:
+        query = f'''
+                SELECT code
+                FROM course
+                WHERE code_name = '{course_name}'
+            '''
+        cursor.execute(query)
+        coursecode = cursor.fetchone()
+        return coursecode[0]
+
+    @staticmethod
+    def get_collegecode(course_name: str = None) -> str:
+        query = f'''
+            SELECT course.code_name, college.college_code
+            FROM course
+            JOIN college
+            ON course.college_name = college.college_code
+            WHERE course.code_name = '{course_name}'
+            LIMIT 1
+        '''
+        cursor.execute(query)
+        _, collegecode = cursor.fetchone()
+        return collegecode
 
  
     @classmethod

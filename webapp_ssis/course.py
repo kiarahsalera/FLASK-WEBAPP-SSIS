@@ -8,8 +8,10 @@ course = Blueprint('course', __name__)
 @course.route("/course", methods=['GET', 'POST'])
 def displayCoursePage():
     course = db.Course.display_course()
+    student = db.Student.display_students()
+    college = db.College.display_college()
     return render_template('course.html', 
-                                course = [course],
+                                course = [course,student,college],
                                 datacount = f'{len(course)} Course')
 
 @course.route('/course/search', methods=['GET', 'POST'])
