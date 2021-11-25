@@ -28,6 +28,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col-sm">ID</th>
+                                <th scope="col-sm">Photo</th>
                                 <th scope="col-sm">Firstname</th>
                                 <th scope="col-sm">Lastname</th>
                                 <th scope="col-sm">Course</th>
@@ -40,11 +41,19 @@
                             {% for student in student [0] %}
                                 <tr>
                                     <td>{{student[0]}}</td>
+                                    {% if 'cloudinary.com'  in student.7 %}
+                                    <td>
+                                        <div class="student-table-image-container">
+                                            <img class="student-table-image" src="{{student.7}}">
+                                        </div>
+                                    </td>
+                                    {% endif %}
                                     <td>{{student[1]}}</td>
                                     <td>{{student[2]}}</td>
                                     <td>{{student[3]}}</td>
                                     <td>{{student[4]}}</td>
                                     <td>{{student[5]}}</td> 
+                                    <td>{{student[6]}}</td>
                                     <td class="text-center">
                                         <a href="#" class="btn btn-warning btn-sm px-3" data-toggle="modal" data-target="#edit-student-modal{{student[0]}}">Edit</a>
                          
@@ -103,6 +112,35 @@
                             </div>
                         </div>
                         <!--END MODAL EDIT-->
+
+                        <script>
+                            var defaultBtn = document.getElementById("default-btn");
+                
+                            function defaultBtnActive(){
+                                defaultBtn.click();
+                            }
+                            defaultBtn.addEventListener("change", function(){
+                                var customBtn = document.getElementById("custom-btn");
+                                var img = document.getElementById('selected-image');
+                                var fileName = document.getElementById("file-name");
+                                var waiter = document.getElementById("waiter");
+                                var file = this.files[0];
+                                if(file){
+                                    var reader = new FileReader();
+                                    reader.onload = function(){
+                                        defaultBtn.value = reader.result;
+                                        img.src = reader.result;
+                                        waiter.value = img.src;
+                                        
+                                    }
+                                    reader.readAsDataURL(file);
+                                }
+                                if (this.value){
+                                    let filename = this.file;
+                                    fileName.value = filename;
+                                }
+                            });
+                        </script>
                 {% endfor %}
                     </table>
             </div>
@@ -117,6 +155,12 @@
                 <!--MODAL BODY-->
                 <div class="modal-body">
                     <form action="{{url_for('student.addStudent')}}" method="POST">
+                        <div class="image-container flex-column">
+                            <div>
+                                <input type="file" class="form-control" accept="image/png, image/jpeg" id="default-btn" value="" name="selected-image" required hidden>
+                                <button onclick="defaultBtnActive()" id="custom-btn" type="button">CHOOSE PHOTO</button>
+                              </div>
+                        </div>
                         <div class="form-group">
                              <label>ID No:</label>
                              <input type="" class="form-control" name="id_no" id="id_no" required="1">

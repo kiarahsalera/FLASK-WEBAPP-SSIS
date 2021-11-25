@@ -5,6 +5,8 @@ from flaskext.mysql import MySQL
 from flask import jsonify
 import os 
 from dotenv import load_dotenv
+
+
 load_dotenv()
 HOST = os.getenv('DB_HOST')
 USERNAME = os.getenv('DB_USERNAME')
@@ -27,7 +29,8 @@ class Student():
         last_name: str = None,
         course: str = None,
         year_level: str = None,
-        gender: str = None) -> None:
+        gender: str = None,
+        photo: str = None) -> None:
     
 
         self.id_no = id_no
@@ -36,6 +39,7 @@ class Student():
         self.course = course
         self.year_level = year_level
         self.gender = gender
+        self.photo = photo
 
 
     def search(self, keyword: str = None, field: str = None) -> list:
@@ -92,20 +96,21 @@ class Student():
 
         return result
 
-
+    
 
 
     def add_student(self):
-        query = "INSERT INTO student(id_no, first_name, last_name, course, year_level, gender) \
+        query = "INSERT INTO student(id_no, first_name, last_name, course, year_level, gender, photo) \
                 VALUES (%s,%s,%s,%s,%s,%s)"
-        data = [self.id_no, self.first_name, self.last_name, self.course, self.year_level, self.gender]
+        data = [self.id_no, self.first_name, self.last_name, self.course, self.year_level, self.gender, self.photo]
         cursor.execute(query, data)
         database.commit() 
 
     @classmethod
     def display_students(self)-> list:
         query = '''
-            SELECT id_no, 
+            SELECT id_no,
+                    photo, 
                    first_name,  
                    last_name, 
                    course, 
@@ -127,7 +132,7 @@ class Student():
         query = f'''
            SELECT id_no, 
                    first_name,  
-                   last_name, 
+                   last_name,   
                    course, 
                    year_level, 
                    gender 
