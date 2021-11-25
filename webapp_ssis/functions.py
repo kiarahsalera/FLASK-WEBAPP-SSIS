@@ -3,17 +3,20 @@ from webapp_ssis import college, course, mysql
 import mysql.connector as mysql
 from flaskext.mysql import MySQL
 from flask import jsonify
-
+import os 
+from dotenv import load_dotenv
+load_dotenv()
+HOST = os.getenv('DB_HOST')
+USERNAME = os.getenv('DB_USERNAME')
+NAME = os.getenv('DB_NAME')
 
 
 database = mysql.connect(
-    host = 'localhost',
-    user = 'root',
-    password= '',
-    database = 'ssis-webapp'
+        host=HOST,
+        user=USERNAME,
+        database=NAME
     )
-
-cursor = database.cursor() 
+cursor = database.cursor(buffered=True)
 
 class Student():
     
