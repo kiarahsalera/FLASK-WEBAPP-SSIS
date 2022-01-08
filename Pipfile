@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
+urllib3 = "*"
 
 [dev-packages]
 

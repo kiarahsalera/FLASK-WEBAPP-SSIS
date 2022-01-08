@@ -29,7 +29,7 @@
                               </tr>
                         </thead>
                         <tbody>
-                            {% for course in course [0] %}
+                            {% for course in data [0] %}
                                 <tr>
                                     <td>{{course[0]}}</td>
                                     <td>{{course[1]}}</td>
@@ -61,10 +61,14 @@
                                                 <label>Name</label>
                                                 <input type="text" class="form-control" name="code_name" value="{{course[1]}}">
                                             </div>
-                                            <div class="form-group">
-                                                <label>College</label>
-                                                <input type="text" class="form-control" name="college_name" value="{{course[2]}}">
-                                            </div>
+                                            <div class="form-group" id="design">
+                                                <label for="college_name" class="form-label">College</label>
+                                                <select id="college_name" name="college_name" class="custom-select">
+                                                    {% for college in data[2] %}
+                                                        <option value="{{college[0]}}" name="college_name">{{college[0]}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                             </div>
                                             
                                             <div class="form-group">
                                                 <button class="btn btn-primary" type="submit">Update</button>
@@ -103,9 +107,13 @@
                              <label>Name:</label>
                              <input type="" class="form-control" name="code_name" id="code_name" required="1">
                          </div>
-                         <div class="form-group">
-                             <label>College:</label>
-                             <input type="" class="form-control" name="college_name" id="college_name" required="1">
+                         <div class="form-group" id="design">
+                            <label for="college_name" class="form-label">College</label>
+                            <select id="college_name" name="college_name" class="custom-select">
+                                {% for college in data[2] %}
+                                    <option value="{{college[0]}}" name="college_name">{{college[0]}}</option>
+                                {% endfor %}
+                            </select>
                          </div>
                          
                         <div class="form-group">

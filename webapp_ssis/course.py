@@ -11,7 +11,7 @@ def displayCoursePage():
     student = db.Student.display_students()
     college = db.College.display_college()
     return render_template('course.html', 
-                                course = [course,student,college],
+                                data = [course,student,college],
                                 datacount = f'{len(course)} Course')
 
 @course.route('/course/search', methods=['GET', 'POST'])
@@ -35,7 +35,7 @@ def search() -> str:
 
         if len(result) != 0:
             return render_template('course.html', 
-                                    course=[result],
+                                    data=[result],
                                     datacount = f'Search Result: {len(result)}'
                                    )
     else:

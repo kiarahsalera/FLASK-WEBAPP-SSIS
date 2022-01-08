@@ -1,16 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request
 from .utils import save_image
 import webapp_ssis.functions as db
-import cloudinary
-from os import getenv
 
-
-
-cloudinary.config(
-    cloud_name = getenv('CLOUD_NAME'),
-    api_key = getenv('API_KEY'),
-    api_secret = getenv('API_SECRET')
-)
 
 
 student = Blueprint('student', __name__)
@@ -23,7 +14,7 @@ def displayStudentPage():
     student = db. Student.display_students()
     course = db.Course.display_course()
     return render_template('student.html', 
-                                student = [student,course],
+                                data = [student,course],
                                 datacount = f'{len(student)} Student')
 
 @student.route('/student/search', methods=['GET', 'POST'])
@@ -53,7 +44,7 @@ def search() -> str:
 
         if len(result) != 0:
             return render_template('student.html', 
-                                    student=[result],
+                                    data=[result],
                                     datacount = f'Search Result: {len(result)}'
                                    )
     else:
@@ -64,19 +55,23 @@ def search() -> str:
 def addStudent() -> str:
     if request.method == "POST":
         image = request.files['selected-image']
+        try:
+            cloud_link = save_image(image)
+        except Exception as e:
+            print("Can't save image")
+            print(e)
     
-        cloud_link = save_image(image)
         id_no = request.form['id_no']
         first_name = request.form['first_name'].capitalize()
         last_name = request.form['last_name'].capitalize()
         course = request.form['course'].upper()
         year_level = request.form['year_level']
         gender = request.form['gender']
-        photo = cloud_link
+        photo = save_image(cloud_link)
 
-     
+        
 
-        student = db.Student(id_no, first_name, last_name, course, year_level, gender, photo)
+        student=db.Student(id_no, first_name, last_name, course, year_level, gender, photo)
         student.add_student()
         return redirect(url_for('student.displayStudentPage'))
 

@@ -38,13 +38,27 @@
                               </tr>
                         </thead>
                         <tbody>
-                            {% for student in student [0] %}
+                            {% for student in data [0] %}
                                 <tr>
                                     <td>{{student[0]}}</td>
-                                    {% if 'cloudinary.com'  in student.7 %}
+                                    {% if student.6 and ('cloudinary.com' not in student.6) %}
                                     <td>
                                         <div class="student-table-image-container">
-                                            <img class="student-table-image" src="{{student.7}}">
+                                            <img class="student-table-image"
+                                            src="../static/photo/student/{{student.6}}">
+                                        </div>
+                                    </td>
+                                    {% elif 'cloudinary.com' in student.6 %}
+                                    <td>
+                                        <div class="student-table-image-container">
+                                            <img class="student-table-image" src="{{student.6}}">
+                                        </div>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <div style="width: 50px; height: 50px; border-radius: 50px; display: flex; overflow: hidden;">
+                                            <img style="display: flex; justify-content: center;" 
+                                            src="../static/photo/student/ico.png">
                                         </div>
                                     </td>
                                     {% endif %}
@@ -53,96 +67,82 @@
                                     <td>{{student[3]}}</td>
                                     <td>{{student[4]}}</td>
                                     <td>{{student[5]}}</td> 
-                                    <td>{{student[6]}}</td>
                                     <td class="text-center">
                                         <a href="#" class="btn btn-warning btn-sm px-3" data-toggle="modal" data-target="#edit-student-modal{{student[0]}}">Edit</a>
                          
                                         <a href="{{url_for('student.delete', id_no=student[0])}}" class="btn btn-danger btn-sm px-3" onclick="return confirm('Are you sure you want to remove ?')">Delete</a>
                                       </td>
                                 </tr>
-                        </tbody>
-                        <!-- MODAL EDIT STUDENT-->
-                        <div id="edit-student-modal{{student[0]}}" class="modal fade"  role="dialog" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Update Information</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{url_for('student.editStudent')}}" method="POST">
-                                            <div class="form-group">   
-                                                <input type="hidden" class="form-control" id="old_id_number" name="old_id_number" value="{{student[0]}}" required="True">
-                                              </div>
-                                            <div class="form-group">
-                                                <label>ID No:</label>
-                                                <input type="text" class="form-control" name="id_no" value="{{student[0]}}">
+                                <!-- MODAL EDIT STUDENT-->
+                                <div id="edit-student-modal{{student[0]}}" class="modal fade"  role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Update Information</h4>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Firstname</label>
-                                                <input type="text" class="form-control" name="first_name" value="{{student[1]}}">
+                                            <div class="modal-body">
+                                                <form action="{{url_for('student.editStudent')}}" method="POST">
+                                                    <div class="form-group">   
+                                                        <input type="hidden" class="form-control" id="old_id_number" name="old_id_number" value="{{student[0]}}" required="True">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>ID No:</label>
+                                                        <input type="text" class="form-control" name="id_no" value="{{student[0]}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Firstname</label>
+                                                        <input type="text" class="form-control" name="first_name" value="{{student[1]}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Lastname</label>
+                                                        <input type="text" class="form-control" name="last_name" value="{{student[2]}}">
+                                                    </div>
+                                                    <div class="form-group" id="design">
+                                                        <label for="course" class="form-label">Course</label>
+                                                        <select id="course" name="course" class="custom-select">
+                                                            {% for course in data[1] %}
+                                                                <option value="{{course[0]}}" name="course">{{course[0]}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group" id="design">
+                                                        <label for="yearlevel" class="col-form-label">Year Level</label>
+                                                        <select id="year_level" name="year_level" class="custom-select">
+                                                          {% for year in range (1,5) %}
+                                                              <option value="{{year}}">{{year}}</option>
+                                                          {% endfor %}
+                                                        </select>
+                                                     </div>
+                                                    <div class="form-group" id="design">
+                                                        <label for="gender" class="col-form-label">Gender</label>
+                                                            <select class="custom-select" id="gender" name="gender">
+                                                                <option selected="">Choose...</option>
+                                                                <option value="Male">Male</option>
+                                                                <option value="Female">Female</option>
+                                                                <option value="Gay">Gay</option>
+                                                                <option value="Bisexual">Bisexual</option>
+                                                                <option value="Unknown">Unknown</option>
+                                                            </select>
+                                                     </div>
+                                                    <div class="form-group">
+                                                        <button class="btn btn-primary" type="submit">Update</button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Lastname</label>
-                                                <input type="text" class="form-control" name="last_name" value="{{student[2]}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Course:</label>
-                                                <input type="text" class="form-control" name="course" value="{{student[3]}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Year Level:</label>
-                                                <input type="text" class="form-control" name="year_level" value="{{student[4]}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Gender:</label>
-                                                <input type="text" class="form-control" name="gender" value="{{student[5]}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <button class="btn btn-primary" type="submit">Update</button>
-                                            </div>
-                                        </form>
-                                    </div>
 
-                                                <!--MODAL EDIT FOOTER-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <!--MODAL EDIT FOOTER-->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                                        <!--MODAL EDIT FOOTER END-->
+                                        </div>
                                     </div>
-                                                <!--MODAL EDIT FOOTER END-->
                                 </div>
-                            </div>
-                        </div>
-                        <!--END MODAL EDIT-->
+                                <!--END MODAL EDIT-->
 
-                        <script>
-                            var defaultBtn = document.getElementById("default-btn");
-                
-                            function defaultBtnActive(){
-                                defaultBtn.click();
-                            }
-                            defaultBtn.addEventListener("change", function(){
-                                var customBtn = document.getElementById("custom-btn");
-                                var img = document.getElementById('selected-image');
-                                var fileName = document.getElementById("file-name");
-                                var waiter = document.getElementById("waiter");
-                                var file = this.files[0];
-                                if(file){
-                                    var reader = new FileReader();
-                                    reader.onload = function(){
-                                        defaultBtn.value = reader.result;
-                                        img.src = reader.result;
-                                        waiter.value = img.src;
-                                        
-                                    }
-                                    reader.readAsDataURL(file);
-                                }
-                                if (this.value){
-                                    let filename = this.file;
-                                    fileName.value = filename;
-                                }
-                            });
-                        </script>
-                {% endfor %}
-                    </table>
+                                
+                            {% endfor %}
+                        </tbody>
             </div>
         </div>
     </div>
@@ -154,16 +154,25 @@
                 </div>
                 <!--MODAL BODY-->
                 <div class="modal-body">
-                    <form action="{{url_for('student.addStudent')}}" method="POST">
+                    <form action="{{url_for('student.addStudent')}}" method="POST" enctype="multipart/form-data">
+
                         <div class="image-container flex-column">
+                            <div class="image-wrapper ">
+                                <div class="image">
+                                    <img id="selected-image" src="../static/photo/student/ico.png" alt="">
+                                </div>
+                                <div id="file-name" hidden></div>
+                            </div>
                             <div>
-                                <input type="file" class="form-control" accept="image/png, image/jpeg" id="default-btn" value="" name="selected-image" required hidden>
-                                <button onclick="defaultBtnActive()" id="custom-btn" type="button">CHOOSE PHOTO</button>
-                              </div>
+                              <input type="file" class="form-control" accept="image/png, image/jpeg" id="default-btn" value="" name="selected-image" required hidden>
+                              <button onclick="defaultBtnActive()" id="custom-btn" type="button">CHOOSE PHOTO</button>
+                            </div>
                         </div>
+
                         <div class="form-group">
                              <label>ID No:</label>
-                             <input type="" class="form-control" name="id_no" id="id_no" required="1">
+                             <input type="" class="form-control" name="id_no" id="id_no" required="1" placeholder="YYYY-NNNN" maxlength="9" minlength="9" pattern="^[0-9]{4}-[0-9]{4}$">
+                             <small id="IDhelp" class="form-text text-muted">Please follow the format. Example: 2019-0000</small>
                          </div>
                          <div class="form-group">
                              <label>First Name:</label>
@@ -173,20 +182,35 @@
                              <label>Last Name:</label>
                              <input type="" class="form-control" name="last_name" id="last_name" required="1">
                          </div>
-                         <div class="form-group">
-                             <label>Course:</label>
-                             <input type="" class="form-control" name="course" id="course" required="1">
+                         <div class="form-group" id="design">
+                            <label for="course" class="form-label">Course</label>
+                            <select id="course" name="course" class="custom-select">
+                                {% for course in data[1] %}
+                                    <option value="{{course[0]}}" name="course">{{course[0]}}</option>
+                                {% endfor %}
+                            </select>
                          </div>
-                         <div class="form-group">
-                             <label>Year:</label>
-                             <input type="" class="form-control" name="year_level" id="year_level" required="1">
+                         <div class="form-group" id="design">
+                            <label for="yearlevel" class="col-form-label">Year Level</label>
+                            <select id="year_level" name="year_level" class="custom-select">
+                              {% for year in range (1,5) %}
+                                  <option value="{{year}}">{{year}}</option>
+                              {% endfor %}
+                            </select>
                          </div>
-                         <div class="form-group">
-                             <label>Gender:</label>
-                             <input type="" class="form-control" name="gender" id="gender" required="1">
+                         <div class="form-group" id="design">
+                            <label for="gender" class="col-form-label">Gender</label>
+                                <select class="custom-select" id="gender" name="gender">
+                                    <option selected="">Choose...</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Gay">Gay</option>
+                                    <option value="Bisexual">Bisexual</option>
+                                    <option value="Unknown">Unknown</option>
+                                </select>
                          </div>
                         <div class="form-group">
-                            <button class="btn btn-primary" type="submit">Add Student</button>
+                            <button class="btn btn-primary"  id="addstudentclicked" type="submit">Add Student</button>
                         </div>
                     </form>
                 </div>
@@ -199,6 +223,34 @@
             </div>
         </div>
     </div>
+    <script>
+        var defaultBtn = document.getElementById("default-btn");
+
+        function defaultBtnActive(){
+            defaultBtn.click();
+        }
+        defaultBtn.addEventListener("change", function(){
+            var customBtn = document.getElementById("custom-btn");
+            var img = document.getElementById('selected-image').value;
+            var fileName = document.getElementById("file-name");
+            var waiter = document.getElementById("waiter");
+            var file = this.files[0];
+            if(file){
+                var reader = new FileReader();
+                reader.onload = function(){
+                    defaultBtn.value = reader.result;
+                    img.src = reader.result;
+                    waiter.value = img.src;
+                    
+                }
+                reader.readAsDataURL(file);
+            }
+            if (this.value){
+                let filename = this.file;
+                fileName.value = filename;
+            }
+        });
+    </script>
     {% endblock %}
 
   

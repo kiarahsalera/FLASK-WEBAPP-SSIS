@@ -18,6 +18,7 @@ database = mysql.connect(
         user=USERNAME,
         database=NAME
     )
+
 cursor = database.cursor(buffered=True)
 
 class Student():
@@ -96,26 +97,42 @@ class Student():
 
         return result
 
-    
 
 
-    def add_student(self):
-        query = "INSERT INTO student(id_no, first_name, last_name, course, year_level, gender, photo) \
-                VALUES (%s,%s,%s,%s,%s,%s)"
-        data = [self.id_no, self.first_name, self.last_name, self.course, self.year_level, self.gender, self.photo]
-        cursor.execute(query, data)
-        database.commit() 
+
+    def add_student(self) -> None:
+        query = f'''
+            INSERT INTO student (
+                id_no, 
+                first_name, 
+                last_name, 
+                course, 
+                year_level, 
+                gender,
+                photo)
+            VALUES (
+                '{self.id_no}',
+                '{self.first_name}',
+                '{self.last_name}',
+                '{self.course}',
+                '{self.year_level}',
+                '{self.gender}',
+                '{self.photo}')
+        '''
+        cursor.execute(query)
+        database.commit()
+        return None
 
     @classmethod
     def display_students(self)-> list:
         query = '''
             SELECT id_no,
-                    photo, 
                    first_name,  
                    last_name, 
                    course, 
                    year_level, 
                    gender,
+                   photo, 
                    course.code_name
             FROM student
             JOIN course
