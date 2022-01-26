@@ -1,10 +1,11 @@
 from re import search
-from webapp_ssis import college, course, mysql
+from webapp_ssis import mysql
 import mysql.connector as mysql
 from flaskext.mysql import MySQL
 from flask import jsonify
 import os 
 from dotenv import load_dotenv
+from webapp_ssis.views import college, course
 
 
 load_dotenv()

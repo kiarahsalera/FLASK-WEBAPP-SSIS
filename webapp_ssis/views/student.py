@@ -55,12 +55,8 @@ def search() -> str:
 def addStudent() -> str:
     if request.method == "POST":
         image = request.files['selected-image']
-        try:
-            cloud_link = save_image(image)
-        except Exception as e:
-            print("Can't save image")
-            print(e)
-    
+        cloud_link = save_image(image)
+
         id_no = request.form['id_no']
         first_name = request.form['first_name'].capitalize()
         last_name = request.form['last_name'].capitalize()

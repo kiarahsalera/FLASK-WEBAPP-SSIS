@@ -41,17 +41,17 @@
                             {% for student in data [0] %}
                                 <tr>
                                     <td>{{student[0]}}</td>
-                                    {% if student.6 and ('cloudinary.com' not in student.6) %}
+                                    {% if student[6] and ('cloudinary.com' not in student[6]) %}
                                     <td>
                                         <div class="student-table-image-container">
                                             <img class="student-table-image"
-                                            src="../static/photo/student/{{student.6}}">
+                                            src="../static/photo/student/{{student[6]}}">
                                         </div>
                                     </td>
-                                    {% elif 'cloudinary.com' in student.6 %}
+                                    {% elif 'cloudinary.com' in student[6] %}
                                     <td>
                                         <div class="student-table-image-container">
-                                            <img class="student-table-image" src="{{student.6}}">
+                                            <img class="student-table-image" src="{{student[6]}}">
                                         </div>
                                     </td>
                                     {% else %}
@@ -140,7 +140,7 @@
                                 </div>
                                 <!--END MODAL EDIT-->
 
-                                
+                                    
                             {% endfor %}
                         </tbody>
             </div>
@@ -231,7 +231,7 @@
         }
         defaultBtn.addEventListener("change", function(){
             var customBtn = document.getElementById("custom-btn");
-            var img = document.getElementById('selected-image').value;
+            var img = document.getElementById('selected-image');
             var fileName = document.getElementById("file-name");
             var waiter = document.getElementById("waiter");
             var file = this.files[0];
@@ -252,5 +252,3 @@
         });
     </script>
     {% endblock %}
-
-  
