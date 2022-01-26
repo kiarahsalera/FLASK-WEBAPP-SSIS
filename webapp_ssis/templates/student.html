@@ -81,7 +81,20 @@
                                                 <h4 class="modal-title">Update Information</h4>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{url_for('student.editStudent')}}" method="POST">
+                                                <form action="{{url_for('student.editStudent')}}" method="POST" enctype="multipart/form-data">
+
+                                                    <div class="image-container flex-column">
+                                                        <div class="image-wrapper ">
+                                                            <div class="image">
+                                                                <img id="selected-image" src="../static/photo/student/ico.png" alt="">
+                                                            </div>
+                                                            <div id="file-name" hidden></div>
+                                                        </div>
+                                                        <div>
+                                                        <input type="file" class="form-control" accept="image/png, image/jpeg" id="default-btn" value="" name="selected-image" required hidden>
+                                                        <button onclick="defaultBtnActive()" id="custom-btn" type="button">CHOOSE PHOTO</button>
+                                                        </div>
+                                                    </div>
                                                     <div class="form-group">   
                                                         <input type="hidden" class="form-control" id="old_id_number" name="old_id_number" value="{{student[0]}}" required="True">
                                                     </div>

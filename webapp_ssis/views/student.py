@@ -82,6 +82,9 @@ def delete(id_no: str) -> str:
 @student.route("/student/edit_student", methods=['GET', 'POST'])
 def editStudent():
     if request.method == "POST":
+        image = request.files['selected-image']
+        cloud_link = save_image(image)
+
         old_id_number = request.form['old_id_number']
         id_no = request.form['id_no']
         first_name = request.form['first_name'].capitalize()
@@ -89,7 +92,8 @@ def editStudent():
         course = request.form['course'].upper()
         year_level = request.form['year_level']
         gender = request.form['gender']
+        photo = save_image(cloud_link)
 
   
-        db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, old_id_number)
+        db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, photo, old_id_number)
         return redirect(url_for('student.displayStudentPage'))

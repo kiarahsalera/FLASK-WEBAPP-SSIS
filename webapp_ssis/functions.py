@@ -172,10 +172,10 @@ class Student():
         return None
 
     @classmethod
-    def edit_student(cls, id_no, first_name, last_name, course, year_level, gender, old_id_number):
+    def edit_student(cls, id_no, first_name, last_name, course, year_level, gender, photo, old_id_number):
         query = "UPDATE student SET id_no=%s, first_name=%s, last_name=%s, course=%s, year_level=%s, \
-                gender=%s WHERE id_no=%s"
-        data = [id_no, first_name, last_name, course, year_level, gender, old_id_number]
+                gender=%s, photo=%s WHERE id_no=%s"
+        data = [id_no, first_name, last_name, course, year_level, gender, photo, old_id_number]
         cursor.execute(query,data)
         database.commit()
 
