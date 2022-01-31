@@ -1,13 +1,15 @@
 from flask import Flask
 from flask_mysql_connector import MySQL
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOST, SECRET_KEY
+from os import getenv
 
 
 mysql = MySQL
 
 
-def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+def create_app() -> object:
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = getenv('SECRET_KEY')
   
 
     app.config.from_mapping(

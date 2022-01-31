@@ -10,5 +10,7 @@ DB_AUTH = getenv("DB_AUTH")
 
 CLOUD_NAME = getenv("CLOUD_NAME")
 API_KEY = getenv("API_KEY")
-API_SECRET = getenv("API_SECRET")
+API_SECRET = getenv("API_SECRET-uo")
 PHOTO_UPLOAD = getenv("PHOTO_UPLOAD")
+
+

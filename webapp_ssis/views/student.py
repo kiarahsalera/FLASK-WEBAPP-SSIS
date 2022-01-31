@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, request
-from .utils import save_image
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from .utils import save_image,update_student_record,delete_image,add_student
 import webapp_ssis.functions as db
 
 
@@ -53,47 +53,76 @@ def search() -> str:
 
 @student.route("/student/add_student", methods=['GET', 'POST'])
 def addStudent() -> str:
-    if request.method == "POST":
+     if request.method == 'POST':
         image = request.files['selected-image']
-        cloud_link = save_image(image)
-
-        id_no = request.form['id_no']
-        first_name = request.form['first_name'].capitalize()
-        last_name = request.form['last_name'].capitalize()
-        course = request.form['course'].upper()
-        year_level = request.form['year_level']
-        gender = request.form['gender']
-        photo = save_image(cloud_link)
-
+        try:
+            cloud_link = save_image(image)
+        except Exception as e:
+            print("Can't save image")
+            print(e)
         
-
-        student=db.Student(id_no, first_name, last_name, course, year_level, gender, photo)
-        student.add_student()
+        student = {
+            'id_no': request.form.get('id_no'),
+            'first_name': request.form.get('first_name'),
+            'last_name': request.form.get('last_name'),
+            'course': request.form.get('course'),
+            'year_level': request.form.get('year_level'),
+            'gender': request.form.get('gender'),
+            'photo' : cloud_link
+        }
+        added = add_student(student)
+        if added:
+            flash(f'{student["first_name"]} is added succesfully!', 'success')
+        else:
+            flash(f'{student["first_name"]} cannot be added. Make sure the ID is unique.', 'danger')
         return redirect(url_for('student.displayStudentPage'))
 
 
-@student.route('/students/delete/<string:id_no>')
+
+@student.route('/student/delete/<string:id_no>')
 def delete(id_no: str) -> str:
+    data=db.Student().get_student(id_no)
+    delete_image(id_no)
     db.Student().delete(id_no)
+    flash(f'{data[0]} deleted from the database.', 'info')
     return redirect(url_for('student.displayStudentPage'))
 
 
-
-@student.route("/student/edit_student", methods=['GET', 'POST'])
-def editStudent():
-    if request.method == "POST":
+@student.route('/student/edit_student/<string:id_no>', methods=['GET', 'POST'])
+def editStudent(id_no: str) -> str:
+    if request.method == 'POST':
         image = request.files['selected-image']
-        cloud_link = save_image(image)
-
-        old_id_number = request.form['old_id_number']
-        id_no = request.form['id_no']
-        first_name = request.form['first_name'].capitalize()
-        last_name = request.form['last_name'].capitalize()
-        course = request.form['course'].upper()
-        year_level = request.form['year_level']
-        gender = request.form['gender']
-        photo = save_image(cloud_link)
-
-  
-        db.Student.edit_student(id_no, first_name, last_name, course, year_level, gender, photo, old_id_number)
+        cloud_link = ''
+        try:
+            cloud_link = save_image(image)
+        except Exception as e:
+            print("Can't save image")
+            print(e)
+        
+        if cloud_link:
+            student = {
+            'id_no': id_no,
+            'first_name': request.form.get('first_name'),
+            'last_name': request.form.get('last_name'),
+            'course': request.form.get('course'),
+            'year_level': request.form.get('year_level'),
+            'gender': request.form.get('gender'),
+            'photo' : cloud_link
+            }
+            update_student_record(student)
+        else:
+            student = {
+            'id_no': id_no,
+            'first_name': request.form.get('first_name'),
+            'last_name': request.form.get('last_name'),
+            'course': request.form.get('course'),
+            'year_level': request.form.get('year_level'),
+            'gender': request.form.get('gender'),
+            'photo' : cloud_link
+            }
+            update_student_record(student)
+        flash(f"{student['first_name']}'s data has been changed succesfully!", 'success')
         return redirect(url_for('student.displayStudentPage'))
+    else:
+        return redirect(url_for('student.displayStudentPage'))
+

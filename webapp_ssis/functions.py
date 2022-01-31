@@ -2,10 +2,9 @@ from re import search
 from webapp_ssis import mysql
 import mysql.connector as mysql
 from flaskext.mysql import MySQL
-from flask import jsonify
 import os 
 from dotenv import load_dotenv
-from webapp_ssis.views import college, course
+
 
 
 load_dotenv()
@@ -123,6 +122,16 @@ class Student():
         cursor.execute(query)
         database.commit()
         return None
+    @staticmethod
+    def get_ID() -> list:
+        query = '''
+            SELECT id_no
+            FROM student
+        '''
+        cursor.execute(query)
+        result = cursor.fetchall()
+        ID = [id_no[0] for id_no in result]
+        return ID
 
     @classmethod
     def display_students(self)-> list:
@@ -153,13 +162,24 @@ class Student():
                    last_name,   
                    course, 
                    year_level, 
-                   gender 
+                   gender
             FROM student
             WHERE id_no = '{id_no}'
         '''
         cursor.execute(query)
         student = list(cursor.fetchone())
         return student
+
+    @staticmethod
+    def get_image_url(id_no: str = None) -> str:
+        query = f'''
+            SELECT photo
+            FROM student
+            WHERE id_no = '{id_no}'
+        '''
+        cursor.execute(query)
+        image_url = list(cursor.fetchone())
+        return image_url
 
     @staticmethod
     def delete(id_no: str = None) -> None:
@@ -171,13 +191,36 @@ class Student():
         database.commit()
         return None
 
-    @classmethod
-    def edit_student(cls, id_no, first_name, last_name, course, year_level, gender, photo, old_id_number):
-        query = "UPDATE student SET id_no=%s, first_name=%s, last_name=%s, course=%s, year_level=%s, \
-                gender=%s, photo=%s WHERE id_no=%s"
-        data = [id_no, first_name, last_name, course, year_level, gender, photo, old_id_number]
-        cursor.execute(query,data)
+   
+    def edit_student(self):
+        if self.photo:
+            query = f'''
+                UPDATE student
+                SET 
+                    first_name = '{self.first_name}',
+                    last_name = '{self.last_name}',
+                    course = '{self.course}',
+                    year_level = {self.year_level},
+                    gender = '{self.gender}',
+                    photo = '{self.photo}'
+                WHERE
+                    id_no = '{self.id_no}'
+            '''
+        else:
+            query = f'''
+                UPDATE student
+                SET 
+                    first_name = '{self.first_name}',
+                    last_name = '{self.last_name}',
+                    course = '{self.course}',
+                    year_level = {self.year_level},
+                    gender = '{self.gender}'
+                WHERE
+                    id_no = '{self.id_no}'
+            '''
+        cursor.execute(query)
         database.commit()
+        return None
 
 
 class Course():
@@ -233,12 +276,20 @@ class Course():
         return result
 
 
-    def add_course(self):
-        query = "INSERT INTO course(code, code_name, college_name) VALUES \
-                 (%s,%s,%s)"
-        data = [self.code, self.code_name, self.college_name]
-        cursor.execute(query, data)
+    def add_course(self) -> None:
+        query = f'''
+            INSERT INTO course (
+                code,
+                code_name,
+                college_name)
+            VALUES (
+                '{self.code}',
+                '{self.code_name}',
+                '{self.college_name}')
+        '''
+        cursor.execute(query)
         database.commit()
+        return None
 
     @classmethod
     def display_course(self)-> list:
@@ -255,39 +306,32 @@ class Course():
         result = cursor.fetchall() 
         course = [list(course) for course in result]
         return course
-        
-    @staticmethod
-    def get_coursecode_for(course_name: str = None) -> str:
-        query = f'''
-                SELECT code
-                FROM course
-                WHERE code_name = '{course_name}'
-            '''
-        cursor.execute(query)
-        coursecode = cursor.fetchone()
-        return coursecode[0]
 
     @staticmethod
-    def get_collegecode(course_name: str = None) -> str:
-        query = f'''
-            SELECT course.code_name, college.college_code
+    def get_coursecodes() -> list:
+        query = '''
+            SELECT code
             FROM course
-            JOIN college
-            ON course.college_name = college.college_code
-            WHERE course.code_name = '{course_name}'
-            LIMIT 1
         '''
         cursor.execute(query)
-        _, collegecode = cursor.fetchone()
-        return collegecode
+        result = cursor.fetchall()
+        CODES = [code[0] for code in result]
+        return CODES  
 
- 
-    @classmethod
-    def edit_course(cls, code, code_name, college_name, old_course_code):
-        query = "UPDATE course SET code=%s, code_name=%s, college_name=%s WHERE code=%s"
-        data = [code, code_name, college_name, old_course_code]
-        cursor.execute(query, data)
+
+    def edit_course(self) -> None:
+        query = f'''
+            UPDATE course
+            SET 
+                code = '{self.code}',
+                code_name = '{self.code_name}',
+                college_name = '{self.college_name}'
+            WHERE
+                code = '{self.code}'
+        '''
+        cursor.execute(query)
         database.commit()
+        return None
 
     @staticmethod
     def delete(code: str = None) -> None:
@@ -349,6 +393,17 @@ class College():
         cursor.execute(query, data)
         database.commit()
 
+    @staticmethod
+    def get_collegecode() -> list:
+        query = '''
+            SELECT college_code
+            FROM college
+        '''
+        cursor.execute(query)
+        result = cursor.fetchall()
+        CODES = [college_code[0] for college_code in result]
+        return CODES
+
     @classmethod
     def display_college(self)-> list:
         query = '''
@@ -362,12 +417,19 @@ class College():
         college = [list(college) for college in result]
         return college
 
-    @classmethod
-    def edit_college(cls, college_code, colcode_name, old_college_code):
-        query = "UPDATE college SET college_code=%s, colcode_name=%s WHERE college_code=%s"
-        data = [college_code, colcode_name, old_college_code]
-        cursor.execute(query, data)
+    
+    def edit_college(self) -> None:
+        query = f'''
+            UPDATE college
+            SET 
+                college_code = '{self.college_code}',
+                colcode_name = '{self.colcode_name}'
+            WHERE
+                college_code = '{self.college_code}'
+        '''
+        cursor.execute(query)
         database.commit()
+        return None
 
     @staticmethod
     def delete(college_code: str = None) -> None:

@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for,flash, request
 import webapp_ssis.functions as db
-import re
-
+from .utils import add_colleges,update_college
 college = Blueprint('college', __name__)
 
 
@@ -42,30 +41,38 @@ def search() -> str:
 
 
 @college.route("/college/add_college", methods=['GET', 'POST'])
-def addCollege():
-    if request.method == "POST":
-        college_code = request.form['college_code'].upper()
-        colcode_name = request.form['colcode_name'].capitalize()
-
-
-        college = db.College(college_code,colcode_name)
-        college.add_college()
+def addCollege() -> str:
+    if request.method == 'POST':
+        college = {
+            'college_code': request.form.get('college_code'),
+            'colcode_name': request.form.get('colcode_name')
+        }
+        add_colleges(college)
+        flash(f'{college["college_code"]} added succesfully!', 'success')
         return redirect(url_for('college.displayCollegePage'))
+    else:
+        return redirect(url_for('college.displayCollegePage'))
+
+
 
 @college.route('/college/delete/<string:college_code>')
 def delete(college_code: str) -> str:
-    db.College().delete(college_code)
-    
-    return redirect(url_for("college.displayCollegePage"))
+    try:
+        db.College().delete(college_code)
+        flash(f'{college_code} deleted from the database.', 'info')
+        return redirect(url_for("college.displayCollegePage"))
+    except:
+        flash(f'{college_code} cannot be deleted. Students or courses are registered under the selected college.', 'danger')
+        return redirect(url_for('college.colleges'))
 
-@college.route("/college/edit_college", methods=['GET', 'POST'])
-def editCollege():
+@college.route("/college/edit_college/<string:college_code>", methods=['GET', 'POST'])
+def editCollege(college_code: str) -> str:
     if request.method == "POST":
-        old_college_number = request.form['old_college_number']
-        college_code = request.form['college_code'].upper()
-        colcode_name = request.form['colcode_name'].capitalize()
-     
-        
-        db.College.edit_college(college_code,colcode_name, old_college_number)
+        college = {
+            'college_code': college_code,
+            'colcode_name': request.form.get('colcode_name')
+        }
+        update_college(college)
+        flash(f"{college_code} has been updated succesfully!", 'info')
         return redirect(url_for('college.displayCollegePage'))
 
