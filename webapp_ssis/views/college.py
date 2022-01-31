@@ -63,7 +63,7 @@ def delete(college_code: str) -> str:
         return redirect(url_for("college.displayCollegePage"))
     except:
         flash(f'{college_code} cannot be deleted. Students or courses are registered under the selected college.', 'danger')
-        return redirect(url_for('college.colleges'))
+        return redirect(url_for('college.displayCollegePage'))
 
 @college.route("/college/edit_college/<string:college_code>", methods=['GET', 'POST'])
 def editCollege(college_code: str) -> str:
